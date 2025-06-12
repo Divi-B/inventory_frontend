@@ -22,6 +22,7 @@ import { ChartData } from 'chart.js';
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
 import { indigo } from 'tailwindcss/colors';
+import { useDataStore } from '../store/dataStore';
 
 
 const BarChart = dynamic(() => import('./visuals/BarChart'), { ssr: false });
@@ -62,22 +63,22 @@ interface DataState {
     setPreviewData: (data: DatasetPreview | null) => void;
 }
 
-export const useDataStore = create<DataState>()(
-    persist(
-        (set) => ({
-            uploadedFile: null,
-            uploadedFullData: null,
-            previewData: null,
-            setUploadedFile: (file) => set({ uploadedFile: file }),
-            setUploadedFullData: (data) => set({ uploadedFullData: data }),
-            setPreviewData: (data) => set({ previewData: data }),
-        }),
-        {
-            name: 'market-analysis-data',
-            storage: createJSONStorage(() => localStorage),
-        }
-    )
-);
+// export const useDataStore = create<DataState>()(
+//     persist(
+//         (set) => ({
+//             uploadedFile: null,
+//             uploadedFullData: null,
+//             previewData: null,
+//             setUploadedFile: (file) => set({ uploadedFile: file }),
+//             setUploadedFullData: (data) => set({ uploadedFullData: data }),
+//             setPreviewData: (data) => set({ previewData: data }),
+//         }),
+//         {
+//             name: 'market-analysis-data',
+//             storage: createJSONStorage(() => localStorage),
+//         }
+//     )
+// );
 
 
 const Charts: React.FC = () => {
@@ -190,7 +191,12 @@ const Charts: React.FC = () => {
                             setPreviewData(null);
                             return; 
                         }
-                        setPreviewData({ columns, data: data.slice(0, 5) });
+                        setPreviewData({
+                            columns, data: data.slice(0, 5),
+                            predictions: [],
+                            summary: '',
+                            full_data: []
+                        });
                         setUploadedFullData(data);
                         setPredictionResults(null); 
                         setPredictedColumnName(null);
