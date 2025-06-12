@@ -31,6 +31,7 @@ const DataVisualization: React.FC<DataVisualizationProps> = ({ uploadedData, col
   const [chartData, setChartData] = useState<any>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const pieChartRef = React.useRef<any>(null);
 
   // Filter numeric columns that can be used for chart values
   const numericColumns = columns.filter(column => {
@@ -211,14 +212,12 @@ const DataVisualization: React.FC<DataVisualizationProps> = ({ uploadedData, col
           <Text size="lg" fw={500} className="mb-4">
             Chart Results
           </Text>
-          <div style={{ height: '400px' }}>
             {chartType === 'bar' ? (
               <BarChart data={chartData} />
             ) : (
-              <PieChart data={chartData} chartRef={undefined} />
+              <PieChart data={chartData} chartRef={pieChartRef} />
             )}
           </div>
-        </div>
       )}
     </Card>
   );
